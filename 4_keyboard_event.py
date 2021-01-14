@@ -18,8 +18,8 @@ character = pygame.image.load("./character.png")
 character_size = character.get_rect().size  # 이미지의 크기를 구해옴
 character_width = character_size[0]         # 캐릭터의 너비
 character_height = character_size[1]        # 캐릭터의 높이
-character_x_pos = screen_width / 2          # 화면 가로의 절반 크기에 해당하는 곳에 위치    (가로위치)
-character_y_pos = screen_height             # 화면 세로 크기 가장 아래에 해당하는 곳에 위치 (세로위치)
+character_x_pos = screen_width / 2  -character_width / 2    # 화면 가로의 절반 크기에 해당하는 곳에 위치    (가로위치)
+character_y_pos = screen_height - character_height          # 화면 세로 크기 가장 아래에 해당하는 곳에 위치 (세로위치)
 
 # 이동할 좌표
 to_x = 0
@@ -51,9 +51,21 @@ while running:
     character_x_pos += to_x
     character_y_pos += to_y
 
+    # 가로 경계 값 처리
+    if character_x_pos < 0:
+        character_x_pos = 0
+    elif character_x_pos > screen_width - character_width:
+        character_x_pos = screen_width - character_width
+
+    # 세로 경계값 처리
+    if character_y_pos < 0:
+        character_y_pos = 0
+    elif character_y_pos > screen_height - character_height:
+        character_y_pos = screen_height - character_height
+
     screen.blit(background, (0,0))      # 배경 그리기
     
-    screen.blit(character, (character_x_pos-character_width/2, character_y_pos-character_height))  # 캐릭터 그리기
+    screen.blit(character, (character_x_pos, character_y_pos))  # 캐릭터 그리기
 
     pygame.display.update()             # 게임 화면 다시 그리기! 반복 호출
 
