@@ -93,8 +93,9 @@ while running:
     enemy_rect.top = enemy_y_pos
 
     # 충돌 체크
-    if character_rect.colliderect(enemy_rect):
+    if character_rect.colliderect(enemy_rect):      # 충돌 처리 함수
         print("!충돌!")
+        running = False
 
     screen.blit(background, (0,0))      # 배경 그리기
     screen.blit(character, (character_x_pos, character_y_pos))  # 캐릭터 그리기
