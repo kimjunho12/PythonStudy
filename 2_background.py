@@ -22,8 +22,8 @@ while running:
         if event.type == pygame.QUIT :  # 창 닫기 버튼 눌렀을 때
             running = False
 
-    #screen.blit(background, (0,0))      # 배경 그리기
-    screen.fill((0, 0, 255))
+    screen.blit(background, (0,0))      # 배경 그리기
+    #screen.fill((0, 0, 255))            # RGB로 화면 채우기
 
     pygame.display.update()             # 게임 화면 다시 그리기! 반복 호출
 
