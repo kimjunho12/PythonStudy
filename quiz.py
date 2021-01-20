@@ -36,24 +36,26 @@ clock = pygame.time.Clock()
 background = pygame.image.load('./background.png')
 
 character = pygame.image.load('./character.png')
-character_width = 70
-character_height = 70
+character_size = character.get_rect().size
+character_width = character_size[0]
+character_height = character_size[1]
 character_x_pos = screen_width/2 - character_width/2
 character_y_pos = screen_height - character_height
 
 enemy = pygame.image.load('./enemy.png')
-enemy_width = 70
-enemy_height = 70
+enemy_size = character.get_rect().size
+enemy_width = character_size[0]
+enemy_height = character_size[1]
 enemy_x_pos = 0
 enemy_y_pos = 0
 
-rand = random.randint(0,480-enemy_width)
+rand = random.randint(0,screen_width-enemy_width)
 
 to_x = 0
 to_y = 0
 speed = 0.6
 
-#이벤트 루프
+# 이벤트 루프
 running = True # 게임이 진행중인가?
 while running:
     dt = clock.tick(30)     # 게임화면의 초당 프레임 수 설정
@@ -74,20 +76,23 @@ while running:
             if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
                 to_x = 0
 
-    character_x_pos += to_x*dt
     # 3. 게임 캐릭터 위치 정의
+    character_x_pos += to_x*dt
+    
     if character_x_pos < 0:
         character_x_pos = 0
     elif character_x_pos > screen_width - character_width:
         character_x_pos = screen_width - character_width
 
-    if enemy_y_pos > 640:
-        rand = random.randint(0,480-enemy_width)
+    if enemy_y_pos > screen_height:
+        rand = random.randint(0,screen_width-enemy_width)
         enemy_x_pos = rand
         enemy_y_pos = 0
     else:
         enemy_x_pos = rand
         enemy_y_pos += 8
+    
+    # 4. 충돌 처리
     
     # 충돌 처리를 위한 rect 정보 업데이트
     character_rect = character.get_rect()
@@ -98,7 +103,6 @@ while running:
     enemy_rect.left = enemy_x_pos
     enemy_rect.top = enemy_y_pos
 
-    # 4. 충돌 처리
     if character_rect.colliderect(enemy_rect):      # 충돌 처리 함수
         print("!충돌!")
         running = False
