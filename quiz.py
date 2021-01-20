@@ -14,6 +14,7 @@
 
 
 import pygame
+import random
 
 ###################################################################################
 # 기본 초기화 (반드시 해야하는 것들)
@@ -46,7 +47,9 @@ enemy_height = 70
 enemy_x_pos = 0
 enemy_y_pos = 0
 
-to_x = 0.6
+rand = random.randint(0,480-enemy_width)
+
+to_x = 0
 to_y = 0
 speed = 0.6
 
@@ -63,13 +66,14 @@ while running:
         # 캐릭터 좌우 이동
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                to_x = -(to_x)
-            if event.key == pygame.K_RIGHT:
-                to_x = -(to_x)
+                to_x -= speed
+            elif event.key == pygame.K_RIGHT:
+                to_x += speed
 
-        # if event.type == pygame.KEYUP:
-        #     to_x = 0
-        print(event, to_x)
+        if event.type == pygame.KEYUP: #방향키를 떼면 멈춤
+            if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                to_x = 0
+
     character_x_pos += to_x*dt
     # 3. 게임 캐릭터 위치 정의
     if character_x_pos < 0:
@@ -77,13 +81,35 @@ while running:
     elif character_x_pos > screen_width - character_width:
         character_x_pos = screen_width - character_width
 
-    # 4. 충돌 처리
+    if enemy_y_pos > 640:
+        rand = random.randint(0,480-enemy_width)
+        enemy_x_pos = rand
+        enemy_y_pos = 0
+    else:
+        enemy_x_pos = rand
+        enemy_y_pos += 8
+    
+    # 충돌 처리를 위한 rect 정보 업데이트
+    character_rect = character.get_rect()
+    character_rect.left = character_x_pos
+    character_rect.top = character_y_pos
 
+    enemy_rect = enemy.get_rect()
+    enemy_rect.left = enemy_x_pos
+    enemy_rect.top = enemy_y_pos
+
+    # 4. 충돌 처리
+    if character_rect.colliderect(enemy_rect):      # 충돌 처리 함수
+        print("!충돌!")
+        running = False
+    
     # 5. 화면에 그리기
     screen.blit(background, (0,0))
     screen.blit(character, (character_x_pos, character_y_pos))
     screen.blit(enemy, (enemy_x_pos, enemy_y_pos))
 
     pygame.display.update()
+
+pygame.time.delay(500)
     
 pygame.quit()
